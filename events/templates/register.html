@@ -1,0 +1,115 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Event Registration</title>
+  <link rel="stylesheet" href="{% static 'style.css' %}">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+
+  {% if success %}
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const card = document.querySelector('.flip-card__inner');
+    card.classList.remove('is-flipped');
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        card.classList.add('is-flipped');
+      });
+    });
+  });
+</script>
+{% endif %}
+<script>
+  function flipBack() {
+    const card = document.querySelector('.flip-card__inner');
+    card.classList.remove('is-flipped');
+    setTimeout(() => {
+      window.location.href = "{% url 'register' %}";
+    }, 850);
+  }
+</script>
+</head>
+<body>
+
+  <div class="scene">
+    <div class="wrapper">
+      <div class="card-switch">
+        <div class="flip-card__inner" id="flipCard">
+
+          <div class="flip-card__front">
+            <div class="title">Register</div>
+            <p class="subtitle">Secure your spot at the event</p>
+            <form class="flip-card__form" method="POST">
+              {% csrf_token %}
+
+              <div class="input-group">
+                <input
+                  class="flip-card__input"
+                  name="full_name"
+                  placeholder="Full Name"
+                  type="text"
+                  value="{{ form.full_name.value|default_if_none:'' }}"
+                />
+                {% if form.full_name.errors %}
+                  <div class="field-error">! {{ form.full_name.errors.0 }}</div>
+                {% endif %}
+              </div>
+
+              <div class="input-group">
+                <input
+                  class="flip-card__input"
+                  name="email"
+                  placeholder="Email (@gmail.com)"
+                  type="email"
+                  value="{{ form.email.value|default_if_none:'' }}"
+                />
+                {% if form.email.errors %}
+                  <div class="field-error">! {{ form.email.errors.0 }}</div>
+                {% endif %}
+              </div>
+
+              <div class="input-group">
+                <input
+                  class="flip-card__input"
+                  name="age"
+                  placeholder="Age (18+)"
+                  type="number"
+                  value="{{ form.age.value|default_if_none:'' }}"
+                />
+                {% if form.age.errors %}
+                  <div class="field-error">! {{ form.age.errors.0 }}</div>
+                {% endif %}
+              </div>
+
+              <div class="input-group">
+                <input
+                  class="flip-card__input"
+                  name="password"
+                  placeholder="Password (8+ chars)"
+                  type="password"
+                />
+                {% if form.password.errors %}
+                  <div class="field-error">! {{ form.password.errors.0 }}</div>
+                {% endif %}
+              </div>
+
+              <button class="flip-card__btn" type="submit">Register →</button>
+            </form>
+          </div>
+
+          <div class="flip-card__back">
+            <div class="success-icon">✓</div>
+            <div class="title">You're In!</div>
+            <p class="success-msg">Your registration was successful. See you at the event!</p>
+            <button class="flip-card__btn" onclick="flipBack()">Register Again</button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
